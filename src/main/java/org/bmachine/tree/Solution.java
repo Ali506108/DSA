@@ -1,10 +1,641 @@
 package org.bmachine.tree;
 
+import org.bmachine.ListNode;
+import org.bmachine.Main;
 import org.bmachine.TreeNode;
 
 import java.util.*;
+import java.util.concurrent.Executors;
 
 public class Solution {
+
+    static void main() {
+        try(var vThread = Executors.newVirtualThreadPerTaskExecutor()) {
+            vThread.submit(() -> IO.println("Java"));
+
+        }
+    }
+
+    public List<Integer> partitionLabels(String s) {
+        List<Integer> res = new ArrayList<>();
+        int[] map = new int[26];
+
+        for (int i = 0; i < s.length(); i++) {
+            map[s.charAt(i)-'a'] = i;
+        }
+
+        int last = 0 , start = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+            last = Math.max(last , map[s.charAt(i) - 'a']);
+            if (last == i) {
+                res.add(last - start +1);
+                start = last+1;
+
+            }
+        }
+        return res;
+    }
+
+
+    public int compress(char[] chars) {
+        int n = chars.length;
+        int i = 0;
+        int index = 0;
+
+        while (i < n) {
+            char ch = chars[i];
+            int count = 0;
+
+            while (i < n && chars[i] == ch) {
+                i++;
+                count++;
+            }
+
+            chars[index++] = ch;
+
+            if (count > 1) {
+                String s = String.valueOf(count);
+                for (char c : s.toCharArray()) {
+                    chars[index++] = c;
+                }
+            }
+        }
+
+        return index;
+    }
+
+    public static boolean isPalindrome_two_edu(String string) {
+
+        // Replace this placeholder return statement with your code
+        int left = 0, right = string.length() -1;
+
+        while (left < right) {
+            if(string.charAt(left) != string.charAt(right)) {
+                return palindromeHelper(left+1 , right , string) ||
+                        palindromeHelper(left , right-1 , string);
+            }else{
+                left++;
+                right--;
+            }
+        }
+
+        return true;
+    }
+
+    private static boolean palindromeHelper(int i , int j , String s) {
+        while(i < j) {
+            if(s.charAt(i) != s.charAt(j) ) {
+                return false;
+            }
+
+            i++;
+            j--;
+        }
+
+        return true;
+    }
+
+
+    public static boolean validWordAbbreviation_str(String word, String abbr) {
+        int left = 0 , right = 0;
+
+        while(left < word.length() && right < abbr.length()) {
+
+            if(Character.isDigit(abbr.charAt(right))) {
+                if(abbr.charAt(right) == '0') return false;
+                int num = 0;
+                while (right < abbr.length() && Character.isDigit(abbr.charAt(right))) {
+                    num = num * 10 + (abbr.charAt(right) - '0');
+                    right++;
+                }
+
+                right += num;
+            }else{
+                if(abbr.charAt(right++) != word.charAt(left++)) {
+                    return false;
+                }
+            }
+        }
+
+        return left == word.length() && right == abbr.length();
+    }
+
+
+    // "internationalization" to "13iz4n"
+    public static boolean validWordAbbreviation(String word, String abbr) {
+        if(word == null || abbr == null) return false;
+        int i = 0 , j = 0;
+        while(i < word.length() && j < abbr.length()) {
+
+            if(Character.isDigit(abbr.charAt(j))) {
+                if(abbr.charAt(j) == '0') return false;
+                int num = 0;
+
+                while(j < abbr.length() && Character.isDigit(abbr.charAt(j))) {
+                    num = num * 10 + (abbr.charAt(j) - '0');
+                    j++;
+                }
+
+                i += num;
+
+            }else{
+
+                if(abbr.charAt(j++) != word.charAt(i++)) {
+                    return false;
+                }
+
+            }
+
+        }
+
+        return i == word.length() && j == abbr.length();
+    }
+
+
+    public static boolean isPalindrome_two(String s) {
+        int left = 0 , right = s.length() -1;
+
+
+        while(left < right) {
+            while(left < right && !Character.isLetterOrDigit(s.charAt(left))) {
+                left++;
+            }
+
+            while(left < right && !Character.isLetterOrDigit(s.charAt(right))) {
+                right--;
+            }
+
+            if(Character.toLowerCase(s.charAt(left)) != Character.toLowerCase(s.charAt(right))) {
+                return false;
+            }
+
+            left++;
+            right--;
+        }
+
+        return true;
+    }
+
+
+    public static boolean isPalindrome(String s) {
+        int left = 0, right = s.length() - 1;
+
+        while (left < right) {
+            while (left < right && !Character.isLetterOrDigit(s.charAt(left))) {
+                left++;
+            }
+
+            while (left < right && !Character.isLetterOrDigit(s.charAt(right))) {
+                right--;
+            }
+
+            if (Character.toLowerCase(s.charAt(left)) != Character.toLowerCase(s.charAt(right))) {
+                // write your code here
+                return false;
+            }
+
+            left++;
+            right--;
+        }
+
+        return true;
+    }
+
+
+    public int appendCharacters_data(String s, String t){
+        int i = 0;
+        int j = 0;
+        int rem = 0;
+        while(i < s.length() &&  j <t.length()) {
+            if(s.charAt(i) == t.charAt(i) ) {
+                    j++;
+            }
+            i++;
+        }
+        if(j == t.length()) {
+            return 0;
+        }else{
+            rem += t.length() -j;
+        }
+
+        return rem;
+    }
+
+    public int appendCharacters(String s, String t) {
+        if(t.isEmpty()) {
+            return 0;
+        }
+        int tIdx = 0 ;
+
+        for(char c : s.toCharArray()) {
+            if(c == t.charAt(tIdx)) {
+                tIdx++;
+                if(tIdx == t.length()) {
+                    return 0;
+                }
+            }
+        }
+
+
+        return t.length() - tIdx;
+    }
+
+    // input : "We love Python "  , output : "Python love We"
+    public static String reverseWords(String sentence) {
+        String[] words = sentence.trim().split("\\s+");
+        int left = 0 , right = words.length-1;
+
+        while(left < right) {
+            String temp = words[left];
+            words[left++] = words[right];
+            words[right--] = temp;
+        }
+        return String.join(" " , words);
+    }
+
+    public EduTreeNode LowestCommonAncestor(EduTreeNode p, EduTreeNode q) {
+        EduTreeNode left = p;
+        EduTreeNode right = q;
+
+        while(left != right) {
+            left = (left == null) ? q : left.parent;
+            right = (right == null) ? p : right.parent;
+
+        }
+
+        return left;
+    }
+
+    public int kthSmallest_second(TreeNode node , int k) {
+        if(node == null) return 0;
+
+        int n =0;
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode cur = node;
+
+        while(!stack.isEmpty() || cur != null) {
+            while(cur != null) {
+                stack.push(cur);
+                cur = cur.left;
+            }
+
+            cur= stack.pop();
+            n+=1;
+
+            if(n== k) return cur.val;
+
+            cur = cur.right;
+        }
+
+        return -1;
+    }
+
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        if(root == null) return new ArrayList<>();
+        List<List<Integer>> res = new ArrayList<>();
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+
+        while(!queue.isEmpty()) {
+            int size = queue.size();
+            List<Integer> currentLevel = new ArrayList<>();
+
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+
+                if(node != null) {
+                    currentLevel.add(node.val);
+                    queue.add(node.left);
+                    queue.add(node.right);
+                }
+            }
+            if(currentLevel.size() > 0) res.add(currentLevel);
+
+        }
+        return res;
+    }
+
+
+    public TreeNode insertIntoBST(TreeNode root, int val) {
+        if(root ==null) return new TreeNode(val);
+
+
+        TreeNode cur = root;
+
+        while (true) {
+            if(cur.val < val) {
+                if(cur.right == null) {
+                    cur.right = new TreeNode(val);
+                    break;
+                }else{
+                    cur = cur.right;
+                }
+            }else {
+                if(cur.left == null) {
+                    cur.left = new TreeNode(val);
+                    break;
+                }else{
+                    cur = cur.left;
+                }
+            }
+        }
+        return cur;
+    }
+
+    public static int[] sortedSquares(int[] nums) {
+        int n = nums.length;
+        int[] res = new int[n];
+        int left = 0 ,  right = nums.length-1;
+        int idx = n-1;
+
+        while (left <= right) {
+            if(Math.abs(nums[left]) < Math.abs(nums[right])) {
+                res[idx--] = nums[right] * nums[right];
+                right--;
+            }else{
+                res[idx--] = nums[left] * nums[left];
+                left++;
+            }
+        }
+
+        return res;
+    }
+
+    public static ListNode reverseTheList(ListNode head) {
+        //ListNode slow = head , fast = head;
+        // my input is data like that 1 -> 2 -> 3 -> 4 -> 5
+        ListNode prev = null;
+
+        while (head != null) {
+            ListNode next = head.next;
+            head.next = prev;
+            prev = head;
+            head = next;
+        }
+
+        return head;
+    }
+
+
+    public static ListNode reverseTheList_rec(ListNode head) {
+
+        if(head == null || head.next == null) return head;
+
+        ListNode result = reverseTheList_rec(head.next);
+        head.next.next = head;
+        head.next = null;
+
+        return result;
+    }
+
+
+    // input data : [2,3,5,7] -> output => 9 => combination of 2 and 7
+    public static int twinSum(ListNode head) {
+        ListNode slow = head , fast = head;
+        int result = 0;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        ListNode prev = null;
+
+        while (slow != null) {
+            ListNode next = slow.next;
+            slow.next = prev;
+            prev = slow;
+            slow = next;
+        }
+
+        ListNode left = head , right = prev;
+
+        while (right != null) {
+            result = Math.max(result, left.val + right.val);
+            left = left.next;
+            right = right.next;
+        }
+
+        return result;
+    }
+
+
+    // input : [1 ,2 ,3 ,4, 4, 5]
+    // in my output i need to return 4
+    // what if we have input like that : [1,3,6,2,7,3,5,4]
+    public static int findDuplicate(int[] nums) {
+
+        int slow = 0 , fast = 0;
+
+        do{
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+        }while (slow != fast);
+
+
+        slow = 0;
+        while (slow != fast){
+            slow = nums[slow];
+
+            fast = nums[fast];
+        }
+
+        return slow;
+    }
+
+    public void reverseString(char[] s) {
+        // Write your code here
+        int left = 0 , right = s.length-1;
+
+        while(left < right) {
+            char temp = s[right];
+            s[right] = s[left];
+            s[left] = temp;
+            left++;
+            right--;
+        }
+    }
+
+    public static int maxSum(int[] nums1, int[] nums2) {
+        // Replace this placeholder return statement with your code
+        int N1 = nums1.length;
+        int N2 = nums2.length;
+        int mod =(int) 1e9+7;
+
+        int point1 = 0;
+        int point2 = 0;
+
+        int sum1 = 0;
+        int sum2 = 0;
+
+        while (point1 < N1 || point2 < N2) {
+            if(point1 == N1) {
+                sum2 += nums2[point2++];
+            }else if(point2 == N2) {
+                sum1 += nums1[point1++];
+            } else if (nums1[point1] < nums2[point2]) {
+                sum1 += nums1[point1++];
+            } else if (nums1[point1] > nums2[point2]) {
+                sum2 += nums2[point2++];
+            }else{
+                sum1 = sum2 = Math.max(sum1 ,sum2 ) + nums1[point1];
+                point1++;
+                point2++;
+            }
+        }
+
+        return (int)(Math.max(sum1 , sum2) % mod);
+    }
+
+
+    public long countSubarrays(int[] nums, int minK, int maxK) {
+        long total = 0;
+
+        int lastMinPos =-1;
+        int lastMaxPos = -1;
+        int lastInvalidPosition = -1;
+
+        for (int i = 0; i < nums.length; i++) {
+            if(nums[i ] < minK || nums[i] > maxK) {
+                lastInvalidPosition = i;
+            }
+
+            if(nums[i] == minK) lastMinPos = i;
+
+            if(nums[i] == maxK) lastMaxPos = i;
+
+            int leftMostValidStart = Math.min(lastMinPos , lastMaxPos);
+            int validSubarraysCount = Math.max(0 , leftMostValidStart - lastInvalidPosition);
+
+            total += validSubarraysCount;
+        }
+
+        return total;
+    }
+
+    public static int[] sortColors (int[] colors) {
+        int left = 0 , low = 0;
+        int right = colors.length -1;
+
+        while (left <= right) {
+
+            if(colors[left] == 0) {
+                swap(colors, left++, low++);
+            }else if(colors[left] == 1) {
+                left++;
+            }else if(colors[left] == 2){
+                swap(colors, left, right--);
+            }
+        }
+
+        return colors;
+    }
+
+    private static void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+
+    int index = 0;
+        HashMap<Integer , Integer > map = new HashMap<>();
+
+        public TreeNode buildTree(int[] preorder, int[] inorder) {
+            for (int i = 0; i < inorder.length; i++) {
+                map.put(inorder[i] , i);
+            }
+
+            return dfs(preorder , 0 , preorder.length - 1);
+        }
+
+        public TreeNode dfs(int[] preorder , int l , int r) {
+            if(l > r) return null;
+
+            int root_val = preorder[index++];
+            TreeNode node = new TreeNode(root_val);
+
+            int mid = map.get(root_val);
+
+            node.left = dfs(preorder ,l , mid-1);
+            node.right = dfs(preorder , mid+1 , r);
+            return node;
+        }
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root == null || p == null || q == null) return null;
+
+        if(root.val > p.val && root.val > q.val) {
+            return lowestCommonAncestor(root.left , p , q);
+        }else if(root.val < p.val && root.val < q.val) {
+            return lowestCommonAncestor(root.right, p, q);
+        }else{
+            return root;
+        }
+    }
+
+    public int kthSmallest(TreeNode root, int k) {
+        if(root == null) return -1;
+
+        int n = 0;
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode curr = root;
+
+        while (!stack.isEmpty() || curr != null) {
+            while(curr != null) {
+                stack.push(curr);
+                curr = curr.left;
+            }
+
+            curr = stack.pop();
+            n+=1;
+
+            if(n == k) return curr.val;
+            curr = curr.right;
+        }
+
+        return -1;
+    }
+
+    public boolean isValidBST(TreeNode root) {
+        if(root == null) return false;
+
+        return dfs_validate(root ,Integer.MIN_VALUE , Integer.MAX_VALUE);
+    }
+
+    private boolean dfs_validate(TreeNode root , int left , int right ) {
+        if(root == null) return true;
+        if(root.val >= right || root.val <= left) return false;
+
+        return dfs_validate(root.right , root.val , right) &&
+                dfs_validate(root.left , left ,root.val);
+    }
+
+
+//    private boolean ValidateBst(TreeNode node, long min, long max) {
+//        if(node == null) return true;
+//        if(node.val >= max || node.val <= min) return false;
+//
+//        return ValidateBst(node.left, min, node.val) && ValidateBst(node.right, node.val, max);
+//
+//    }
+//
+    public int goodNodes(TreeNode root) {
+        if(root == null) return 0;
+
+        return goodNodeHelper(root , root.val);
+    }
+
+    private int goodNodeHelper(TreeNode node , int maxElem) {
+
+        if(maxElem <= node.val) {
+            return 1 + goodNodeHelper(node.left , node.val ) + goodNodeHelper(node.right , node.val);
+        }else{
+            return goodNodeHelper(node.left , maxElem ) + goodNodeHelper(node.right , maxElem);
+        }
+    }
+
 
     public List<Integer> rightSideView(TreeNode root) {
         List<Integer> result = new ArrayList<>();

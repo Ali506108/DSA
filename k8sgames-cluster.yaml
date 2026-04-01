@@ -1,0 +1,101 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: default
+  namespace: ""
+  uid: mn5rxtn9-08u1nmqj-0010
+  labels:
+    kubernetes.io/metadata.name: default
+  creationTimestamp: "2026-03-25T08:21:02.421Z"
+spec: {}
+status:
+  phase: Active
+  conditions: []
+  observedGeneration: 0
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kube-system
+  namespace: ""
+  uid: mn5rxtna-c1smch7h-0011
+  labels:
+    kubernetes.io/metadata.name: kube-system
+  creationTimestamp: "2026-03-25T08:21:02.422Z"
+spec: {}
+status:
+  phase: Active
+  conditions: []
+  observedGeneration: 0
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kube-public
+  namespace: ""
+  uid: mn5rxtna-qt2jc2c2-0012
+  labels:
+    kubernetes.io/metadata.name: kube-public
+  creationTimestamp: "2026-03-25T08:21:02.422Z"
+spec: {}
+status:
+  phase: Active
+  conditions: []
+  observedGeneration: 0
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kube-node-lease
+  namespace: ""
+  uid: mn5rxtna-2p9p6g7u-0013
+  labels:
+    kubernetes.io/metadata.name: kube-node-lease
+  creationTimestamp: "2026-03-25T08:21:02.422Z"
+spec: {}
+status:
+  phase: Active
+  conditions: []
+  observedGeneration: 0
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: node-1
+  namespace: ""
+  uid: mn5rxtna-bws15fn7-0014
+  creationTimestamp: "2026-03-25T08:21:02.422Z"
+spec:
+  cpu: 4
+  memory: 8Gi
+  status: Ready
+status:
+  phase: Running
+  conditions:
+    - type: Ready
+      status: True
+      reason: KubeletReady
+      message: ""
+      lastTransitionTime: "2026-03-25T08:21:02.423Z"
+      lastHeartbeatTime: "2026-03-25T08:21:05.422Z"
+    - type: MemoryPressure
+      status: False
+      reason: KubeletHasSufficientMemory
+      message: ""
+      lastTransitionTime: "2026-03-25T08:21:02.472Z"
+      lastHeartbeatTime: "2026-03-25T08:21:05.422Z"
+    - type: PIDPressure
+      status: False
+      reason: KubeletHasSufficientPIDs
+      message: ""
+      lastTransitionTime: "2026-03-25T08:21:02.472Z"
+      lastHeartbeatTime: "2026-03-25T08:21:05.422Z"
+  observedGeneration: 0
+  allocatable:
+    cpu: 4000
+    memory: 8192
+  usage:
+    cpu: 0
+    memory: 0
+    cpuPercent: 0
+    memoryPercent: 0
