@@ -378,6 +378,196 @@ public class Solution {
     }
 
 
+
+    public static boolean circularArrayLoop(int[] nums) {
+
+        for (int i = 0; i < nums.length; i++) {
+            int slow = i , fast = i;
+
+            do {
+                slow = getNextIndex(slow , nums);
+                fast = getNextIndex(getNextIndex(fast , nums) , nums);
+            }while (slow != fast);
+        }
+
+        return true;
+    }
+
+    private static int getNextIndex(int num , int[] nums) {
+        int n = nums.length;
+        int nextIndex = (num + nums[num]) % n;
+        return nextIndex >= 0 ? nextIndex : nextIndex + n;
+    }
+
+
+    public static int maxProfit(int[] prices) {
+        int minPrice = Integer.MAX_VALUE;
+        int max = 0;
+
+
+        for(int price : prices) {
+            if(price < minPrice) {
+                minPrice = price;
+            } else if (price-minPrice > max) {
+                max = price-minPrice;
+            }
+        }
+        return max;
+    }
+
+    public static int findLongestSubstring(String str) {
+        int left =0 , right =0;
+        int res = 0;
+        Set<Character> set = new HashSet<>();
+
+
+        while (right < str.length()) {
+            if (set.contains(str.charAt(right))) {
+                set.remove(str.charAt(left++));
+            }else{
+                set.add(str.charAt(right++));
+                res = Math.max(res , right - left);
+            }
+        }
+
+        return res;
+    }
+
+    public static int longestRepeatingCharacterReplacement(String s, int k) {
+        int left = 0 ,  right = 0;
+        int[] alp = new int[26];
+        int res = 0 , maxCount = 0;
+
+        while (right < s.length()) {
+            int curIndex = s.charAt(right) - 'A';
+            alp[curIndex]++;
+
+            maxCount = Math.max(maxCount , alp[curIndex]);
+
+            if(right -left +1-maxCount >k){
+                alp[s.charAt(left) - 'A']--;
+                left++;
+            }
+            res = Math.max(res , right - left +1);
+            right++;
+        }
+        return res;
+    }
+
+
+    private static int res = Integer.MIN_VALUE;
+    public int maxPathSum(TreeNode root) {
+        res = root.val;
+        getMaxSum(root);
+        return res;
+    }
+
+    private int getMaxSum(TreeNode root) {
+        if (root == null) return 0;
+
+        int left = getMaxSum(root.left);
+        int right = getMaxSum(root.right);
+        res = Math.max(res , root.val + left + right);
+
+        return Math.max( 0 , Math.max(root.val , Math.max(
+                root.val + left , root.val + right
+        )));
+    }
+
+    public static boolean detectCycle(ListNode head) {
+        if(head == null) return false;
+
+        ListNode slow = head , fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+
+            if(fast == slow) return true;
+        }
+        return false;
+    }
+
+    public static boolean isHappyNumber(int n) {
+        int slow = n;
+        int fast = n;
+
+        do{
+            slow = getNext(slow);
+            fast = getNext(getNext(fast));
+        }while (slow != fast);
+
+        return slow ==1;
+    }
+
+
+    public static int middleOfTheArray(int[] nums) {
+        int slow = 0 , fast = 0;
+
+        while (fast < nums.length-1) {
+
+            slow++;
+            fast +=2;
+
+        }
+        return slow;
+    }
+
+
+    public static boolean palindrome(ListNode head) {
+        ListNode slow = head , fast = head;
+
+        while (fast !=null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        ListNode prev = null;
+        while (slow != null) {
+            ListNode next = slow.next;
+            slow.next = prev;
+            prev = slow;
+            slow =next;
+        }
+
+        while (prev != null) {
+            if (prev.val != head.val) {
+                return false;
+            }
+            prev = prev.next;
+            head = head.next;
+        }
+
+        return true;
+    }
+
+
+
+    public static ListNode middleNode(ListNode head) {
+        ListNode slow = head , fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        return slow;
+    }
+
+    private static int getNext(int n) {
+        int sum = 0;
+
+        while (n != 0) {
+            sum += (n% 10) * (n%10);
+            n/=10;
+        }
+
+        return sum;
+    }
+
+
+
+
     public static ListNode reverseTheList_rec(ListNode head) {
 
         if(head == null || head.next == null) return head;
