@@ -16,6 +16,65 @@ public class Solution {
         }
     }
 
+    public static int leastInterval(char[] tasks , int n) {
+        int[] count = new int[26];
+
+        for(char task : tasks) {
+            count[task - 'A']++;
+        }
+
+        Arrays.sort(count);
+
+        int maxf = count[25];
+        int idle = (maxf -1) *n;
+
+        for(int i = 24 ; i >= 0; i--){
+            idle -= Math.min(count[i] , maxf-1);
+        }
+
+        return Math.max(0 , idle) + tasks.length;
+
+    }
+
+    public boolean carPooling(int[][] trips, int capacity) {
+        Arrays.sort(trips , (a , b) -> a[1] - b[1]);
+
+        for(int i = 0; i<trips.length ; i++) {
+            int curPas =trips[i][0];
+            for (int j = 0; j<i;j++) {
+                if(trips[j][2]> trips[i][1]) {
+                    curPas+=trips[j][0];
+                }
+            }
+            if (curPas > capacity) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    public int countDays(int days, int[][] meetings) {
+        Arrays.sort(meetings , (a ,b) -> a[0]-b[0]);
+
+        int freeDays = 0;
+        int lastCoverDay = 0;
+
+        for (int[] meeting : meetings) {
+            int start = meeting[0];
+            int endDay = meeting[1];
+
+            if(lastCoverDay < start) {
+                freeDays += start - lastCoverDay-1;
+            }
+
+            lastCoverDay = Math.max(lastCoverDay , endDay);
+        }
+        freeDays+=days -lastCoverDay;
+
+        return freeDays;
+    }
+
     public List<Integer> partitionLabels(String s) {
         List<Integer> res = new ArrayList<>();
         int[] map = new int[26];
@@ -454,6 +513,98 @@ public class Solution {
         return res;
     }
 
+    public int totalFruit(int[] fruits) {
+        int left = 0 , right = 0;
+        Map<Integer , Integer> map = new HashMap<>();
+        int res = 0;
+
+        while (right < fruits.length) {
+            map.put(fruits[right] , map.getOrDefault(fruits[right] , 0) +1);
+
+            while (map.size() > 2) {
+                map.put(fruits[left] , map.get(fruits[left]) -1);
+                if(map.get(fruits[left]) == 0) {
+                    map.remove(fruits[left]);
+                }
+                left++;
+            }
+
+            res = Math.max(res , right - left +1);
+            right++;
+        }
+
+        return res;
+    }
+
+    public List<String> findRepeatedDnaSequences(String s) {
+        Map<String , Integer> map = new HashMap<>();
+        List<String> repeated = new ArrayList<>();
+
+        for (int i = 0; i <s.length(); i++) {
+            String cur = s.substring(i , i+10);
+
+            int newCount = map.merge(cur , 1 , Integer::sum);
+
+            if(newCount ==2) repeated.add(cur);
+        }
+
+        return repeated;
+    }
+
+
+    public int MaxProfit_(int[] prices) {
+        int left = 0 , res = 0;
+        for(int right = 0 ; right < prices.length ; right++){
+            int profit = prices[right] - prices[left];
+            if (profit > 0) {
+                res = Math.max(res , profit);
+            }else {
+                left = right;
+            }
+        }
+
+        return res;
+    }
+
+
+    public static int maxFrequency(int[] nums, int k) {
+        Arrays.sort(nums);
+        int left = 0 , right = 0;
+        long total = 0;
+        int res = 1;
+
+        while (right < nums.length) {
+            total += nums[right];
+
+            while ( (long) nums[right] * (right - left +1) - total > k) {
+                total -= nums[left];
+                left++;
+            }
+
+            res = Math.max(res , right - left +1);
+            right++;
+        }
+
+        return res;
+    }
+
+    public static double findMaxAverage_copy(int[] nums, int k) {
+        int sum = 0;
+
+        for (int i = 0; i < k; i++) {
+            sum += nums[i];
+        }
+
+        int maxSum = sum;
+
+        for (int i = k; i < nums.length; i++) {
+            sum += nums[i] - nums[i-k];
+            maxSum = Math.max(maxSum , sum);
+        }
+
+        return (double) maxSum / k;
+    }
+
 
     private static int res = Integer.MIN_VALUE;
     public int maxPathSum(TreeNode root) {
@@ -646,6 +797,51 @@ public class Solution {
             right--;
         }
     }
+
+    public static void rotate(int[] nums, int k) {
+        int len = nums.length;
+        k = k&len;
+
+        reverse(nums , 0 , len-1);
+        reverse(nums , 9, k-1);
+        reverse(nums , k , len-1);
+    }
+
+    private static void reverse(int[] nums , int left , int right ) {
+        while (left < right) {
+            int temp = nums[left];
+            nums[left] = nums[right];
+            nums[right] = temp;
+
+            left++;
+            right--;
+        }
+    }
+
+
+    public static int[][] intervalsIntersection(int[][] intervalLista, int[][] intervalListb) {
+        List<int[]> res = new ArrayList<>();
+        int i = 0 , j = 0;
+
+        while (i < intervalLista.length && j < intervalListb.length) {
+            int start = Math.max(intervalLista[i][0] , intervalListb[j][0]);
+            int end = Math.min(intervalListb[j][1] , intervalLista[i][1]);
+
+            if (start <= end) {
+                res.add(new int[]{start ,end});
+            }
+
+            if (intervalLista[i][1] > intervalListb[j][1]){
+                i++;
+            }else {
+                j++;
+            }
+        }
+
+        return res.toArray(new int[res.size()][]);
+
+    }
+
 
     public static int maxSum(int[] nums1, int[] nums2) {
         // Replace this placeholder return statement with your code
